@@ -11,6 +11,7 @@ class NhanVien {
         this.totalSalary = 0;
 
     };
+
 }
 
 export default NhanVien;

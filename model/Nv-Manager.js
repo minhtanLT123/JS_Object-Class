@@ -4,13 +4,13 @@ class NvManager {
         this.arr = [];
 
     }
-    addNhanVien(NhanVien) {
-        this.arr.push(NhanVien)
+    addNhanVien(nhanVien) {
+        this.arr.push(nhanVien)
 
     }
     findIndexNV(id) {
         let index = -1;
-        for (i = 0; i < this.arr.length; i++) {
+        for (let i = 0; i < this.arr.length; i++) {
             const nhanVien = this.arr[i];
             if (nhanVien.id === id) {
                 index = i;
@@ -21,7 +21,20 @@ class NvManager {
         return index;
 
     }
-    updateNhanVien() {
+    getNhanVienByID(id) {
+        const index = this.findIndexNV(id);
+        if (index !== -1) {
+            return this.arr[index];
+        }
+
+
+
+    }
+    updateNhanVien(NV) {
+        const index = this.findIndexNV(NV.id);
+        if (index !== -1) {
+            this.arr[index] = NV;
+        }
 
     }
     deleteNhanVien(id) {

@@ -17,9 +17,7 @@ const getInfoNhanVien = () => {
     const salary = getEleID("luongCB").value;
     const jobTitle = getEleID("chucvu").value;
     const workHours = getEleID("gioLam").value;
-
-    const NV = new NhanVien(id, name, email, password, startDay, salary, jobTitle, workHours)
-
+    const NV = new NhanVien(id, name, email, password, startDay, salary, jobTitle, workHours);
     return NV;
 
 };
@@ -51,6 +49,9 @@ const renderListNhanVien = (data) => {
             <td>${jobTitleConvert()} </td>
             <td>${NV.workHours} </td>
             <td>${NV.totalSalary} </td>
+            <td class = "btn btn-info" data-toggle="modal" data-target="#myModal"  onclick ="handleEditNhanVien('${NV.id}')" >Edit </td>
+            <td class = "btn btn-danger" onclick = "handleDeleteNhanVien('${NV.id}')">Delete </td>
+            
 
         </tr>
       
@@ -63,6 +64,11 @@ const renderListNhanVien = (data) => {
 /**
  * Add Nhan vien
  */
+getEleID("btnThem").onclick = function () {
+    getEleID("btnCapNhat").style.display = "none";
+    getEleID("btnThemNV").style.display = "block";
+
+}
 
 getEleID("btnThemNV").onclick = function () {
 
@@ -72,6 +78,42 @@ getEleID("btnThemNV").onclick = function () {
     setLocalStorage();
 
 }
+/**
+ * Edit Nhan vien
+ */
+
+
+const handleEditNhanVien = () => {
+
+    getEleID("btnCapNhat").style.display = "block";
+    getEleID("btnThemNV").style.display = "none";
+
+    const NV = manager.getNhanVienByID(id);
+    if (NV) {
+        getEleID("tknv").innerHTML = NV.id;
+        getEleID("name").innerHTML = NV.name;
+        getEleID("email").innerHTML = NV.email;
+        getEleID("password").innerHTML = NV.password;
+        getEleID("datepicker").innerHTML = NV.startDay;
+        getEleID("luongCB").innerHTML = NV.salary;
+        getEleID("chucvu").innerHTML = NV.jobTitle;
+        getEleID("gioLam").innerHTML = NV.workHours;
+
+    }
+}
+window.handleEditNhanVien = handleEditNhanVien;
+
+/**
+ * Delete Nhan vien
+ */
+const handleDeleteNhanVien = (id) => {
+    manager.deleteNhanVien(id);
+    renderListNhanVien(manager.arr);
+    setLocalStorage();
+
+}
+window.handleDeleteNhanVien = handleDeleteNhanVien;
+
 
 
 /**
@@ -86,6 +128,9 @@ const setLocalStorage = () => {
  * get localStorage
  */
 const getLocalStorage = () => {
+    const dataString = localStorage.getItem("LIST_NV");
+    if (!dataString) return true;
+
     const dataJson = JSON.parse(dataString);
     manager.arr = dataJson;
     renderListNhanVien(dataJson);
