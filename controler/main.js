@@ -18,42 +18,50 @@ const getInfoNhanVien = () => {
     const jobTitle = getEleID("chucvu").value;
     const workHours = getEleID("gioLam").value;
     const NV = new NhanVien(id, name, email, password, startDay, salary, jobTitle, workHours);
+    NV.tinhTongLuong();
+    NV.xepLoaiRank();
     return NV;
 
 };
 
 const renderListNhanVien = (data) => {
     let contentHTML = "";
+
     for (let i = 0; i < data.length; i++) {
         const NV = data[i];
+
         const jobTitleConvert = function () {
-            if (NV.jobTitle.value === 1 || NV.jobTitle.value === "1") {
-                return "Nhan vien"
+            if (NV.jobTitle === 1 || NV.jobTitle === "1") {
+                return "Nhân Viên";
             }
-            else if (NV.jobTitle.value === 2 || NV.jobTitle.value === "2") {
-                return "Truong Phong"
+            else if (NV.jobTitle === 2 || NV.jobTitle === "2") {
+                return "Trưởng Phòng";
             }
-            else if (NV.jobTitle.value === 3 || NV.jobTitle.value === "3") {
-                return "Sep"
+            else if (NV.jobTitle === 3 || NV.jobTitle === "3") {
+                return "Sếp";
             }
+            else {
+                return "";
+            }
+
         }
+
         contentHTML += `
         <tr>
 
             <td>${NV.id} </td>
             <td>${NV.name} </td>
             <td>${NV.email} </td>
-            <td>${NV.password} </td>
-            <td>${NV.datepicker} </td>
-            <td>${NV.salary} </td>
+            <td>${NV.startDay} </td>
             <td>${jobTitleConvert()} </td>
-            <td>${NV.workHours} </td>
             <td>${NV.totalSalary} </td>
+            <td>${NV.rank} </td>
             <td class = "btn btn-info" data-toggle="modal" data-target="#myModal"  onclick ="handleEditNhanVien('${NV.id}')" >Edit </td>
             <td class = "btn btn-danger" onclick = "handleDeleteNhanVien('${NV.id}')">Delete </td>
             
 
         </tr>
+        
       
         `;
 
@@ -61,10 +69,12 @@ const renderListNhanVien = (data) => {
     getEleID("tableDanhSach").innerHTML = contentHTML;
 
 }
+
 /**
  * Add Nhan vien
  */
 getEleID("btnThem").onclick = function () {
+    getEleID("header-title").innerHTML = "Thêm Nhân Viên";
     getEleID("btnCapNhat").style.display = "none";
     getEleID("btnThemNV").style.display = "block";
 
@@ -83,25 +93,36 @@ getEleID("btnThemNV").onclick = function () {
  */
 
 
-const handleEditNhanVien = () => {
-
+const handleEditNhanVien = (id) => {
+    getEleID("header-title").innerHTML = "Sửa Thông Tin";
     getEleID("btnCapNhat").style.display = "block";
     getEleID("btnThemNV").style.display = "none";
 
     const NV = manager.getNhanVienByID(id);
     if (NV) {
-        getEleID("tknv").innerHTML = NV.id;
-        getEleID("name").innerHTML = NV.name;
-        getEleID("email").innerHTML = NV.email;
-        getEleID("password").innerHTML = NV.password;
-        getEleID("datepicker").innerHTML = NV.startDay;
-        getEleID("luongCB").innerHTML = NV.salary;
-        getEleID("chucvu").innerHTML = NV.jobTitle;
-        getEleID("gioLam").innerHTML = NV.workHours;
+        getEleID("tknv").value = NV.id;
+        getEleID("name").value = NV.name;
+        getEleID("email").value = NV.email;
+        getEleID("password").value = NV.password;
+        getEleID("datepicker").value = NV.startDay;
+        getEleID("luongCB").value = NV.salary;
+        getEleID("chucvu").value = NV.jobTitle;
+        getEleID("gioLam").value = NV.workHours;
 
     }
 }
 window.handleEditNhanVien = handleEditNhanVien;
+/**
+ * Update Nhan vien
+*/
+getEleID("btnCapNhat").onclick = (id) => {
+    const NV = getInfoNhanVien(id);
+    manager.updateNhanVien(NV);
+    renderListNhanVien(manager.arr)
+    setLocalStorage();
+
+}
+
 
 /**
  * Delete Nhan vien

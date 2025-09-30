@@ -21,6 +21,12 @@ class NvManager {
         return index;
 
     }
+    deleteNhanVien(id) {
+        const index = this.findIndexNV(id);
+        this.arr.splice(index, 1);
+
+    }
+
     getNhanVienByID(id) {
         const index = this.findIndexNV(id);
         if (index !== -1) {
@@ -37,11 +43,8 @@ class NvManager {
         }
 
     }
-    deleteNhanVien(id) {
-        const index = this.findIndexNV(id);
-        this.arr.splice(index, 1);
 
-    }
+
 
 }
 export default NvManager;
