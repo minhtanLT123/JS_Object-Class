@@ -14,72 +14,64 @@ const getInfoNhanVien = () => {
     const email = getEleID("email").value;
     const password = getEleID("password").value;
     const startDay = getEleID("datepicker").value;
-    const salary = getEleID("luongCB").value;
+    const baseSalary = parseFloat(getEleID("luongCB").value);
     const jobTitle = getEleID("chucvu").value;
-    const workHours = getEleID("gioLam").value;
-    const NV = new NhanVien(id, name, email, password, startDay, salary, jobTitle, workHours);
+    const workHours = parseFloat(getEleID("gioLam").value);
+    const NV = new NhanVien(id, name, email, password, startDay, baseSalary, jobTitle, workHours);
     NV.tinhTongLuong();
     NV.xepLoaiRank();
     return NV;
 
+
+
 };
 
-const renderListNhanVien = (data) => {
+const renderListNhanVien = (listNhanVien) => {
     let contentHTML = "";
-
-    for (let i = 0; i < data.length; i++) {
-        const NV = data[i];
-
+    for (let i = 0; i < listNhanVien.length; i++) {
+        const NV = listNhanVien[i];
         const jobTitleConvert = function () {
-            if (NV.jobTitle === 1 || NV.jobTitle === "1") {
+            if (NV.jobTitle === "1") {
                 return "Nhân Viên";
             }
-            else if (NV.jobTitle === 2 || NV.jobTitle === "2") {
+            else if (NV.jobTitle === "2") {
                 return "Trưởng Phòng";
             }
-            else if (NV.jobTitle === 3 || NV.jobTitle === "3") {
+            else if (NV.jobTitle === "3") {
                 return "Sếp";
             }
             else {
                 return "";
             }
-
         }
-
         contentHTML += `
         <tr>
-
             <td>${NV.id} </td>
             <td>${NV.name} </td>
             <td>${NV.email} </td>
             <td>${NV.startDay} </td>
             <td>${jobTitleConvert()} </td>
-            <td>${NV.totalSalary} </td>
+            <td>${NV.toltalSalary}</td>
             <td>${NV.rank} </td>
             <td class = "btn btn-info" data-toggle="modal" data-target="#myModal"  onclick ="handleEditNhanVien('${NV.id}')" >Edit </td>
             <td class = "btn btn-danger" onclick = "handleDeleteNhanVien('${NV.id}')">Delete </td>
-            
-
         </tr>
-        
-      
         `;
-
     }
     getEleID("tableDanhSach").innerHTML = contentHTML;
-
 }
-
 /**
  * Add Nhan vien
  */
 getEleID("btnThem").onclick = function () {
+
     getEleID("header-title").innerHTML = "Thêm Nhân Viên";
     getEleID("btnCapNhat").style.display = "none";
     getEleID("btnThemNV").style.display = "block";
+    getInfoNhanVien();
+
 
 }
-
 getEleID("btnThemNV").onclick = function () {
 
     const NV = getInfoNhanVien();
@@ -91,8 +83,6 @@ getEleID("btnThemNV").onclick = function () {
 /**
  * Edit Nhan vien
  */
-
-
 const handleEditNhanVien = (id) => {
     getEleID("header-title").innerHTML = "Sửa Thông Tin";
     getEleID("btnCapNhat").style.display = "block";
@@ -105,25 +95,24 @@ const handleEditNhanVien = (id) => {
         getEleID("email").value = NV.email;
         getEleID("password").value = NV.password;
         getEleID("datepicker").value = NV.startDay;
-        getEleID("luongCB").value = NV.salary;
+        getEleID("luongCB").value = NV.baseSalary;
         getEleID("chucvu").value = NV.jobTitle;
         getEleID("gioLam").value = NV.workHours;
-
+        NV.tinhTongLuong();
+        NV.xepLoaiRank();
     }
 }
 window.handleEditNhanVien = handleEditNhanVien;
 /**
  * Update Nhan vien
 */
-getEleID("btnCapNhat").onclick = (id) => {
-    const NV = getInfoNhanVien(id);
+getEleID("btnCapNhat").onclick = () => {
+    const NV = getInfoNhanVien();
     manager.updateNhanVien(NV);
     renderListNhanVien(manager.arr)
     setLocalStorage();
 
 }
-
-
 /**
  * Delete Nhan vien
  */
@@ -135,8 +124,6 @@ const handleDeleteNhanVien = (id) => {
 }
 window.handleDeleteNhanVien = handleDeleteNhanVien;
 
-
-
 /**
  * set localStorage
  */
@@ -145,15 +132,18 @@ const setLocalStorage = () => {
     localStorage.setItem("LIST_NV", dataString);
 }
 
+
 /**
  * get localStorage
  */
 const getLocalStorage = () => {
+
     const dataString = localStorage.getItem("LIST_NV");
     if (!dataString) return true;
 
     const dataJson = JSON.parse(dataString);
     manager.arr = dataJson;
     renderListNhanVien(dataJson);
-}
+};
 getLocalStorage();
+

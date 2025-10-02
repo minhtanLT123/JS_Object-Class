@@ -1,11 +1,11 @@
 class NhanVien {
-    constructor(id, name, email, password, startDay, salary, jobTitle, workHours) {
+    constructor(id, name, email, password, startDay, baseSalary, jobTitle, workHours) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.startDay = startDay;
-        this.salary = salary;
+        this.baseSalary = baseSalary;
         this.jobTitle = jobTitle;
         this.workHours = workHours;
         this.totalSalary = 0;
@@ -13,20 +13,21 @@ class NhanVien {
 
     };
     tinhTongLuong() {
-        switch (this.jobTitle.toLowerCase()) {
-            case "giám đốc":
-                this.totalSalary = this.salary * 3;
+        switch (this.jobTitle) {
+            case "3":
+                this.totalSalary = this.baseSalary * 3;
                 break;
-            case "trưởng phòng":
-                this.totalSalary = this.salary * 2;
+            case "2":
+                this.totalSalary = this.baseSalary * 2;
                 break;
-            case "nhân viên":
-                this.totalSalary = this.salary;
+            case "1":
+                this.totalSalary = this.baseSalary * 1;
                 break;
             default:
-                this.totalSalary = this.salary; // Mặc định nếu chức vụ không khớp
+                this.totalSalary = this.baseSalary * 1; // Mặc định nếu chức vụ không khớp
         }
-    }
+
+    };
 
 
     xepLoaiRank() {
@@ -43,6 +44,7 @@ class NhanVien {
             this.rank = "Nhân viên trung bình";
         }
     }
+
 
 
 
