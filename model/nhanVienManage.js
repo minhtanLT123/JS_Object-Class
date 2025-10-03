@@ -4,15 +4,15 @@ class NvManager {
         this.arr = [];
 
     }
-    addNhanVien(nhanVien) {
-        this.arr.push(nhanVien)
+    addNhanVien(NV) {
+        this.arr.push(NV)
 
     }
     findIndexNV(id) {
         let index = -1;
         for (let i = 0; i < this.arr.length; i++) {
-            const nhanVien = this.arr[i];
-            if (nhanVien.id === id) {
+            const NV = this.arr[i];
+            if (NV.id === id) {
                 index = i;
                 break;
 

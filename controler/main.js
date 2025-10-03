@@ -1,5 +1,5 @@
-import NhanVien from "../model/nhan-vien.js";
-import NvManager from "../model/Nv-Manager.js";
+import NhanVien from "../model/nhanVien.js";
+import NvManager from "../model/nhanVienManage.js";
 
 
 const manager = new NvManager();
@@ -51,7 +51,7 @@ const renderListNhanVien = (listNhanVien) => {
             <td>${NV.email} </td>
             <td>${NV.startDay} </td>
             <td>${jobTitleConvert()} </td>
-            <td>${NV.toltalSalary}</td>
+            <td>${NV.totalSalary}</td>
             <td>${NV.rank} </td>
             <td class = "btn btn-info" data-toggle="modal" data-target="#myModal"  onclick ="handleEditNhanVien('${NV.id}')" >Edit </td>
             <td class = "btn btn-danger" onclick = "handleDeleteNhanVien('${NV.id}')">Delete </td>
