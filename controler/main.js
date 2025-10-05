@@ -12,12 +12,14 @@ const resetForm = () => {
 }
 
 
-// dong nhan vien
+// close form
 const closeForm = () => {
     getEleID("btnDong").click();
 }
 
-const getInfoNhanVien = (isAdd) => {
+
+
+const getInfoNhanVien = () => {
     const id = getEleID("tknv").value;
     const name = getEleID("name").value;
     const email = getEleID("email").value;
@@ -27,29 +29,45 @@ const getInfoNhanVien = (isAdd) => {
     const jobTitle = getEleID("chucvu").value;
     const workHours = parseFloat(getEleID("gioLam").value);
 
-    // dat co: boolean
-    let isValid = true;
-
+    let isValid = true; // flag: boolean
     /**
-     * kiem tra tinh hop le -  validation
+     * kiểm tra tính hợp lệ -  validation
      */
 
     // id validation
-    if (isAdd) {
 
-        isValid &=
-            validate.checkEmpty(id, "tbTKNV", "(*) Vui Lòng nhập ID") &&
-            validate.checkExist(id, "tbTKNV", "(*) ID đã tồn tại vui lòng nhập mới", manager.arr) &&
-            validate.checkLength(id, "tbTKNV", "(*) ID có độ dài không quá 6 ký tự số", 1, 6);
-    }
+    isValid &=
+        validate.checkEmpty(id, "tbTKNV", "(*) Vui Lòng nhập ID") &&
+        validate.checkExist(id, "tbTKNV", "(*) ID đã tồn tại vui lòng nhập mới", manager.arr) &&
+        validate.checkLength(id, "tbTKNV", "(*) ID có độ dài không quá 6 ký tự số", 1, 6);
 
+    // name validation
+    isValid &=
+        validate.checkEmpty(name, "tbTen", "(*) Vui Lòng nhập Tên") &&
+        validate.checkName(name, "tbTen", "(*) Vui Lòng nhập Tên đúng cách không có ký tự đặc biệt");
+    // email validation
+    isValid &=
+        validate.checkEmpty(email, "tbEmail", "(*) Vui Lòng nhập Email") &&
+        validate.checkEmail(email, "tbEmail", "(*) Vui Lòng nhập Email đúng cách")
 
+    // password validation
+    isValid &=
+        validate.checkEmpty(password, "tbMatKhau", "(*) Vui Lòng nhập Mật Khẩu") &&
+        validate.checkEmail(password, "tbMatKhau", "(*) Vui Lòng nhập Mật Khẩu đúng cách")
+
+    // date validation
+    isValid &=
+        validate.checkEmpty(startDay, "tbNgay", "(*) Vui Lòng chọn ngày làm");
+    // salary validation
+    isValid &=
+        validate.checkEmpty(baseSalary, "tbLuongCB", "(*) Vui Lòng nhập lương cơ bản");
 
     // jobTitile validation
-    // isValid &= validate.checkOption(id, "chucvu",)
-
-    // option validaton
-
+    isValid &=
+        validate.checkOption("chucvu", "tbChucVu", "(*) Vui Lòng chọn vị trí công việc");
+    // work hours validation
+    isValid &=
+        validate.checkEmpty(workHours, "tbGiolam", "(*) Vui Lòng nhập giờ làm");
 
 
     if (!isValid) return null;
@@ -60,6 +78,13 @@ const getInfoNhanVien = (isAdd) => {
     return NV;
 
 };
+/**
+ * function reset validation tag 
+ */
+const deleteValidationTag = () => {
+
+    document.getElementsByClassName("sp-thongbao").innerHTML = "";
+}
 
 const renderListNhanVien = (listNhanVien) => {
     let contentHTML = "";
@@ -103,17 +128,17 @@ getEleID("btnThem").onclick = function () {
     getEleID("header-title").innerHTML = "Thêm Nhân Viên";
     getEleID("btnCapNhat").style.display = "none";
     getEleID("btnThemNV").style.display = "block";
-    getInfoNhanVien();
     resetForm();
 
 
 }
 getEleID("btnThemNV").onclick = function () {
 
-    const NV = getInfoNhanVien(true);
+    const NV = getInfoNhanVien();
     manager.addNhanVien(NV);
     renderListNhanVien(manager.arr);
     setLocalStorage();
+    getEleID("tknv").disable = false;
     closeForm();
 
 }
@@ -121,10 +146,11 @@ getEleID("btnThemNV").onclick = function () {
  * Edit Nhan vien
  */
 const handleEditNhanVien = (id) => {
+
     getEleID("header-title").innerHTML = "Sửa Thông Tin";
     getEleID("btnCapNhat").style.display = "block";
     getEleID("btnThemNV").style.display = "none";
-
+    deleteValidationTag();
     const NV = manager.getNhanVienByID(id);
     if (NV) {
         getEleID("tknv").value = NV.id;
@@ -137,6 +163,7 @@ const handleEditNhanVien = (id) => {
         getEleID("gioLam").value = NV.workHours;
         NV.tinhTongLuong();
         NV.xepLoaiRank();
+
     }
 }
 window.handleEditNhanVien = handleEditNhanVien;

@@ -2,7 +2,7 @@ import { getEleID } from "./../controler/main.js";
 
 class Validation {
     checkEmpty(value, errorId, mess) {
-        if (value === "") {
+        if (value === "" || !value) {
             getEleID(errorId).style.display = "block";
             getEleID(errorId).innerHTML = mess;
             return false;
@@ -12,6 +12,51 @@ class Validation {
         getEleID(errorId).innerHTML = "";
         return true;
     };
+    checkName(value, errorId, mess) {
+        let letter =
+            "^[a-zA-Z_ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
+            "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
+            "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$";
+
+        if (value.match(letter)) {
+            getEleID(errorId).style.display = "none";
+            getEleID(errorId).innerHTML = "";
+            return true;
+
+        }
+        getEleID(errorId).style.display = "block";
+        getEleID(errorId).innerHTML = mess;
+        return false;
+    };
+
+    checkEmail(value, errorId, mess) {
+        let Email =
+            "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+        if (value.match(Email)) {
+            getEleID(errorId).style.display = "none";
+            getEleID(errorId).innerHTML = "";
+            return true;
+
+        }
+        getEleID(errorId).style.display = "block";
+        getEleID(errorId).innerHTML = mess;
+        return false;
+
+    };
+    checkPassWord() {
+        let Password =
+            "/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{0,}$/";
+        if (value.match(Password)) {
+            getEleID(errorId).style.display = "none";
+            getEleID(errorId).innerHTML = "";
+            return true;
+
+        }
+        getEleID(errorId).style.display = "block";
+        getEleID(errorId).innerHTML = mess;
+        return false;
+
+    }
 
     checkExist(value, errorId, mess, listNhanVien) {
         let isExist = false; // chua ton tai
@@ -42,6 +87,19 @@ class Validation {
         getEleID(errorId).style.display = "block";
         getEleID(errorId).innerHTML = mess;
         return false;
+
+    }
+    checkOption(idSelect, errorId, mess) {
+        const optionIndex = getEleID(idSelect).selectedIndex;
+        if (optionIndex === 0) {
+            getEleID(errorId).style.display = "block";
+            getEleID(errorId).innerHTML = mess;
+            return false;
+
+        }
+        getEleID(errorId).style.display = "none";
+        getEleID(errorId).innerHTML = "";
+        return true;
 
     }
 };
