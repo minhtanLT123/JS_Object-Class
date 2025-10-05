@@ -1,14 +1,23 @@
-import NhanVien from "../model/nhanVien.js";
-import NvManager from "../model/nhanVienManage.js";
+import NhanVien from "./../model/nhanVien.js";
+import NvManager from "./../model/nhanVienManage.js";
+import Validation from "./../model/validation.js";
 
 
+export const getEleID = (id) => document.getElementById(id);
+const validate = new Validation();
 const manager = new NvManager();
-const getEleID = (id) => document.getElementById(id);
+// clear form
+const resetForm = () => {
+    getEleID("form-id").reset();
+}
 
 
+// dong nhan vien
+const closeForm = () => {
+    getEleID("btnDong").click();
+}
 
-const getInfoNhanVien = () => {
-
+const getInfoNhanVien = (isAdd) => {
     const id = getEleID("tknv").value;
     const name = getEleID("name").value;
     const email = getEleID("email").value;
@@ -17,12 +26,38 @@ const getInfoNhanVien = () => {
     const baseSalary = parseFloat(getEleID("luongCB").value);
     const jobTitle = getEleID("chucvu").value;
     const workHours = parseFloat(getEleID("gioLam").value);
+
+    // dat co: boolean
+    let isValid = true;
+
+    /**
+     * kiem tra tinh hop le -  validation
+     */
+
+    // id validation
+    if (isAdd) {
+
+        isValid &=
+            validate.checkEmpty(id, "tbTKNV", "(*) Vui Lòng nhập ID") &&
+            validate.checkExist(id, "tbTKNV", "(*) ID đã tồn tại vui lòng nhập mới", manager.arr) &&
+            validate.checkLength(id, "tbTKNV", "(*) ID có độ dài không quá 6 ký tự số", 1, 6);
+    }
+
+
+
+    // jobTitile validation
+    // isValid &= validate.checkOption(id, "chucvu",)
+
+    // option validaton
+
+
+
+    if (!isValid) return null;
+
     const NV = new NhanVien(id, name, email, password, startDay, baseSalary, jobTitle, workHours);
     NV.tinhTongLuong();
     NV.xepLoaiRank();
     return NV;
-
-
 
 };
 
@@ -69,15 +104,17 @@ getEleID("btnThem").onclick = function () {
     getEleID("btnCapNhat").style.display = "none";
     getEleID("btnThemNV").style.display = "block";
     getInfoNhanVien();
+    resetForm();
 
 
 }
 getEleID("btnThemNV").onclick = function () {
 
-    const NV = getInfoNhanVien();
+    const NV = getInfoNhanVien(true);
     manager.addNhanVien(NV);
     renderListNhanVien(manager.arr);
     setLocalStorage();
+    closeForm();
 
 }
 /**
@@ -111,16 +148,19 @@ getEleID("btnCapNhat").onclick = () => {
     manager.updateNhanVien(NV);
     renderListNhanVien(manager.arr)
     setLocalStorage();
+    closeForm();
 
 }
 /**
  * Delete Nhan vien
  */
 const handleDeleteNhanVien = (id) => {
-    manager.deleteNhanVien(id);
-    renderListNhanVien(manager.arr);
-    setLocalStorage();
-
+    const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa nhân viên này?");
+    if (confirmDelete) {
+        manager.deleteNhanVien(id);
+        renderListNhanVien(manager.arr);
+        setLocalStorage();
+    }
 }
 window.handleDeleteNhanVien = handleDeleteNhanVien;
 
@@ -146,4 +186,20 @@ const getLocalStorage = () => {
     renderListNhanVien(dataJson);
 };
 getLocalStorage();
+
+/**
+ * search nhan vien
+ *  
+ */
+getEleID("searchName").addEventListener("keyup", () => {
+    const keyword = getEleID("searchName").value;
+    const searchNV = manager.searchNhanVien(keyword);
+    console.log(searchNV);
+    renderListNhanVien(searchNV);
+
+});
+
+
+
+
 

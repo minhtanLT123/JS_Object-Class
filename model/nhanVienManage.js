@@ -23,7 +23,9 @@ class NvManager {
     }
     deleteNhanVien(id) {
         const index = this.findIndexNV(id);
+
         this.arr.splice(index, 1);
+
 
     }
 
@@ -43,8 +45,37 @@ class NvManager {
         }
 
     }
+    searchNhanVien(keyword) {
 
+        const searchNV = [];
+        for (let i = 0; i < this.arr.length; i++) {
 
+            const NV = this.arr[i];
+            const keywordLowerCase = keyword.toLowerCase();
+            const NVLowerCase = NV.name.toLowerCase();
+            // kiem tra keywrord co nam trong Nhan vien hay khoong
+            if (NVLowerCase.indexOf(keywordLowerCase) !== -1) {
+                searchNV.push(NV);
+            }
+        }
+        return searchNV;
+
+    }
+    sortNhanVien() {
+        const sort = [];
+        let index = 0;
+        for (let i = 0; i < this.arr.length; i++) {
+            const min = this.arr[0];
+
+            if (min > this.arr[i]) {
+                min = this.arr[i];
+                index++;
+            }
+
+        }
+        return sort;
+
+    }
 
 }
 export default NvManager;
