@@ -13,21 +13,13 @@ class NhanVien {
 
     };
     tinhTongLuong() {
-        switch (this.jobTitle) {
-            case "3":
-                this.totalSalary = this.baseSalary * 3;
-                break;
-            case "2":
-                this.totalSalary = this.baseSalary * 2;
-                break;
-            case "1":
-                this.totalSalary = this.baseSalary * 1;
-                break;
-            default:
-                this.totalSalary = this.baseSalary * 1; // Mặc định nếu chức vụ không khớp
-        }
-
-    };
+        const salaryMultiplier = {
+            "sep": 3,
+            "truongphong": 2,
+            "nhanvien": 1
+        };
+        this.totalSalary = this.baseSalary * (salaryMultiplier[this.jobTitle] || 1);
+    }
 
 
     xepLoaiRank() {
@@ -44,9 +36,6 @@ class NhanVien {
             this.rank = "Nhân viên trung bình";
         }
     }
-
-
-
 
 }
 

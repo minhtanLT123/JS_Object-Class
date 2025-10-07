@@ -1,3 +1,4 @@
+import NhanVien from "./nhanVien.js";
 
 class NvManager {
     constructor() {
@@ -45,6 +46,24 @@ class NvManager {
         }
 
     }
+    restoreFromLocal(dataArray) {
+        this.arr = dataArray.map(item => {
+            const nv = new NhanVien(
+                item.id,
+                item.name,
+                item.email,
+                item.password,
+                item.startDay,
+                item.baseSalary,
+                item.jobTitle,
+                item.workHours
+            );
+            nv.tinhTongLuong();
+            nv.xepLoaiRank();
+            return nv;
+        });
+    }
+
     searchNhanVien(keyword) {
 
         const searchNV = [];

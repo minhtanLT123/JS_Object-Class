@@ -15,7 +15,7 @@ const closeForm = () => {
     getEleID("btnDong").click();
 }
 /**
- * function getInfoNhanVien
+ * function getInfoNhanVien từ form nhập liệu
  */
 const getInfoNhanVien = (isAdd) => {
     const id = getEleID("tknv").value;
@@ -36,14 +36,15 @@ const getInfoNhanVien = (isAdd) => {
     if (isAdd) {
         isValid &=
             validate.checkEmpty(id, "tbTKNV", "(*) Vui Lòng nhập ID") &&
-            validate.checkExist(id, "tbTKNV", "(*) ID đã tồn tại vui lòng nhập mới", manager.arr);
+            validate.checkExist(id, "tbTKNV", "(*) ID đã tồn tại vui lòng nhập mới", manager.arr) &&
+            validate.checkLength(id, "tbTKNV", "(*) ID tối đa 4 - 6 ký số", 1, 6);
 
     }
 
     // name validation
     isValid &=
         validate.checkEmpty(name, "tbTen", "(*) Vui Lòng nhập Tên") &&
-        validate.checkName(name, "tbTen", "(*) Vui Lòng nhập Tên đúng cách không có ký tự đặc biệt");
+        validate.checkName(name, "tbTen", "(*) Tên nhân viên phải là chữ");
     // email validation
     isValid &=
         validate.checkEmpty(email, "tbEmail", "(*) Vui Lòng nhập Email") &&
@@ -52,22 +53,22 @@ const getInfoNhanVien = (isAdd) => {
     // password validation
     isValid &=
         validate.checkEmpty(password, "tbMatKhau", "(*) Vui Lòng nhập Mật Khẩu") &&
-        validate.checkPassWord(password, "tbMatKhau", "(*) Vui Lòng nhập Mật Khẩu đúng cách");
+        validate.checkPassWord(password, "tbMatKhau", "(*) mật Khẩu từ 6-10 ký tự, chứa ký tự số, chữ thường, in hoa, đặc biệt");
 
     // date validation
-    // isValid &=
-    //     validate.checkEmpty(startDay, "tbNgay", "(*) Vui Lòng chọn ngày làm");
+    isValid &=
+        validate.checkEmpty(startDay, "tbNgay", "(*) Vui Lòng chọn ngày làm");
+
     // salary validation
-    // isValid &=
-    //     validate.checkEmpty(baseSalary, "tbLuongCB", "(*) Vui Lòng nhập lương cơ bản");
+    isValid &=
+        validate.checkEmpty(baseSalary, "tbLuongCB", "(*) Vui Lòng nhập lương cơ bản");
 
     // jobTitile validation
     isValid &=
         validate.checkOption("chucvu", "tbChucVu", "(*) Vui Lòng chọn vị trí công việc");
     // work hours validation
-    // isValid &=
-    //     validate.checkEmpty(workHours, "tbGiolam", "(*) Vui Lòng nhập giờ làm");
-
+    isValid &=
+        validate.checkEmpty(workHours, "tbGiolam", "(*) Vui Lòng nhập giờ làm");
 
     if (!isValid) return null;
 
@@ -81,13 +82,11 @@ const getInfoNhanVien = (isAdd) => {
  * function deleteValidationTag
  */
 const deleteValidationTag = () => {
-
     const tags = document.getElementsByClassName("sp-thongbao");
     for (let tag of tags) {
         tag.innerHTML = "";
         tag.style.display = "none";
     }
-
 }
 /**
  * function renderListNhanVien
@@ -125,6 +124,7 @@ const renderListNhanVien = (listNhanVien) => {
  * mở form add nhân viên
  */
 getEleID("btnThem").onclick = function () {
+    getEleID("tknv").disabled = false;
     deleteValidationTag();
     getEleID("header-title").innerHTML = "Thêm Nhân Viên";
     getEleID("btnCapNhat").style.display = "none";
@@ -132,7 +132,7 @@ getEleID("btnThem").onclick = function () {
     resetForm();
 
 }
-// Add nhân viên vào localStorage
+// Add nhân viên vào vào trang wep và lưu dữ liệu vào localStorage
 getEleID("btnThemNV").onclick = function () {
 
     const NV = getInfoNhanVien(true);
@@ -140,7 +140,6 @@ getEleID("btnThemNV").onclick = function () {
     manager.addNhanVien(NV);
     renderListNhanVien(manager.arr);
     setLocalStorage();
-
     closeForm();
 
 }
@@ -148,7 +147,7 @@ getEleID("btnThemNV").onclick = function () {
  * Edit Nhân viên
  */
 const handleEditNhanVien = (id) => {
-
+    getEleID("tknv").disabled = true;
     getEleID("header-title").innerHTML = "Sửa Thông Tin";
     getEleID("btnCapNhat").style.display = "block";
     getEleID("btnThemNV").style.display = "none";
@@ -163,8 +162,8 @@ const handleEditNhanVien = (id) => {
         getEleID("luongCB").value = NV.baseSalary;
         getEleID("chucvu").value = NV.jobTitle;
         getEleID("gioLam").value = NV.workHours;
-        NV.tinhTongLuong();
-        NV.xepLoaiRank();
+        NV.tinhTongLuong(id);
+        NV.xepLoaiRank(id);
 
     }
 }
@@ -209,10 +208,10 @@ const getLocalStorage = () => {
 
     const dataString = localStorage.getItem("LIST_NV");
     if (!dataString) return true;
-
     const dataJson = JSON.parse(dataString);
-    manager.arr = dataJson;
-    renderListNhanVien(dataJson);
+    manager.restoreFromLocal(dataJson);
+    renderListNhanVien(manager.arr);
+
 };
 getLocalStorage();
 
@@ -222,7 +221,6 @@ getLocalStorage();
 getEleID("searchName").addEventListener("keyup", () => {
     const keyword = getEleID("searchName").value;
     const searchNV = manager.searchNhanVien(keyword);
-    console.log(searchNV);
     renderListNhanVien(searchNV);
 
 });
