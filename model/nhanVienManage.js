@@ -35,7 +35,7 @@ class NvManager {
             return this.arr[index];
         }
 
-
+        return null;
 
     }
     updateNhanVien(NV) {
@@ -61,21 +61,21 @@ class NvManager {
         return searchNV;
 
     }
-    sortNhanVien() {
-        const sort = [];
-        let index = 0;
-        for (let i = 0; i < this.arr.length; i++) {
-            const min = this.arr[0];
+    // sortNhanVien() {
+    //     const sort = [];
+    //     let index = 0;
+    //     for (let i = 0; i < this.arr.length; i++) {
+    //         const min = this.arr[0];
 
-            if (min > this.arr[i]) {
-                min = this.arr[i];
-                index++;
-            }
+    //         if (min > this.arr[i]) {
+    //             min = this.arr[i];
+    //             index++;
+    //         }
 
-        }
-        return sort;
+    //     }
+    //     return sort;
 
-    }
+    // }
 
 }
 export default NvManager;

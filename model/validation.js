@@ -14,9 +14,7 @@ class Validation {
     };
     checkName(value, errorId, mess) {
         let letter =
-            "^[a-zA-Z_ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
-            "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
-            "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$";
+            /^[a-zA-Z0-9_ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
 
         if (value.match(letter)) {
             getEleID(errorId).style.display = "none";
@@ -31,7 +29,7 @@ class Validation {
 
     checkEmail(value, errorId, mess) {
         let Email =
-            "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (value.match(Email)) {
             getEleID(errorId).style.display = "none";
             getEleID(errorId).innerHTML = "";
@@ -43,9 +41,9 @@ class Validation {
         return false;
 
     };
-    checkPassWord() {
+    checkPassWord(value, errorId, mess) {
         let Password =
-            "/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{0,}$/";
+            /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,}$/;
         if (value.match(Password)) {
             getEleID(errorId).style.display = "none";
             getEleID(errorId).innerHTML = "";
@@ -56,7 +54,7 @@ class Validation {
         getEleID(errorId).innerHTML = mess;
         return false;
 
-    }
+    };
 
     checkExist(value, errorId, mess, listNhanVien) {
         let isExist = false; // chua ton tai
@@ -77,7 +75,7 @@ class Validation {
         getEleID(errorId).innerHTML = "";
         return true;
 
-    }
+    };
     checkLength(value, errorId, mess, min, max) {
         if (value && min <= value.trim().length && value.trim().length <= max) {
             getEleID(errorId).style.display = "none";
@@ -88,7 +86,7 @@ class Validation {
         getEleID(errorId).innerHTML = mess;
         return false;
 
-    }
+    };
     checkOption(idSelect, errorId, mess) {
         const optionIndex = getEleID(idSelect).selectedIndex;
         if (optionIndex === 0) {
@@ -101,7 +99,7 @@ class Validation {
         getEleID(errorId).innerHTML = "";
         return true;
 
-    }
+    };
 };
 
 

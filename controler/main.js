@@ -10,16 +10,14 @@ const manager = new NvManager();
 const resetForm = () => {
     getEleID("form-id").reset();
 }
-
-
 // close form
 const closeForm = () => {
     getEleID("btnDong").click();
 }
-
-
-
-const getInfoNhanVien = () => {
+/**
+ * function getInfoNhanVien
+ */
+const getInfoNhanVien = (isAdd) => {
     const id = getEleID("tknv").value;
     const name = getEleID("name").value;
     const email = getEleID("email").value;
@@ -35,11 +33,12 @@ const getInfoNhanVien = () => {
      */
 
     // id validation
+    if (isAdd) {
+        isValid &=
+            validate.checkEmpty(id, "tbTKNV", "(*) Vui Lòng nhập ID") &&
+            validate.checkExist(id, "tbTKNV", "(*) ID đã tồn tại vui lòng nhập mới", manager.arr);
 
-    isValid &=
-        validate.checkEmpty(id, "tbTKNV", "(*) Vui Lòng nhập ID") &&
-        validate.checkExist(id, "tbTKNV", "(*) ID đã tồn tại vui lòng nhập mới", manager.arr) &&
-        validate.checkLength(id, "tbTKNV", "(*) ID có độ dài không quá 6 ký tự số", 1, 6);
+    }
 
     // name validation
     isValid &=
@@ -48,26 +47,26 @@ const getInfoNhanVien = () => {
     // email validation
     isValid &=
         validate.checkEmpty(email, "tbEmail", "(*) Vui Lòng nhập Email") &&
-        validate.checkEmail(email, "tbEmail", "(*) Vui Lòng nhập Email đúng cách")
+        validate.checkEmail(email, "tbEmail", "(*) Vui Lòng nhập Email đúng cách");
 
     // password validation
     isValid &=
         validate.checkEmpty(password, "tbMatKhau", "(*) Vui Lòng nhập Mật Khẩu") &&
-        validate.checkEmail(password, "tbMatKhau", "(*) Vui Lòng nhập Mật Khẩu đúng cách")
+        validate.checkPassWord(password, "tbMatKhau", "(*) Vui Lòng nhập Mật Khẩu đúng cách");
 
     // date validation
-    isValid &=
-        validate.checkEmpty(startDay, "tbNgay", "(*) Vui Lòng chọn ngày làm");
+    // isValid &=
+    //     validate.checkEmpty(startDay, "tbNgay", "(*) Vui Lòng chọn ngày làm");
     // salary validation
-    isValid &=
-        validate.checkEmpty(baseSalary, "tbLuongCB", "(*) Vui Lòng nhập lương cơ bản");
+    // isValid &=
+    //     validate.checkEmpty(baseSalary, "tbLuongCB", "(*) Vui Lòng nhập lương cơ bản");
 
     // jobTitile validation
     isValid &=
         validate.checkOption("chucvu", "tbChucVu", "(*) Vui Lòng chọn vị trí công việc");
     // work hours validation
-    isValid &=
-        validate.checkEmpty(workHours, "tbGiolam", "(*) Vui Lòng nhập giờ làm");
+    // isValid &=
+    //     validate.checkEmpty(workHours, "tbGiolam", "(*) Vui Lòng nhập giờ làm");
 
 
     if (!isValid) return null;
@@ -79,29 +78,31 @@ const getInfoNhanVien = () => {
 
 };
 /**
- * function reset validation tag 
+ * function deleteValidationTag
  */
 const deleteValidationTag = () => {
 
-    document.getElementsByClassName("sp-thongbao").innerHTML = "";
-}
+    const tags = document.getElementsByClassName("sp-thongbao");
+    for (let tag of tags) {
+        tag.innerHTML = "";
+        tag.style.display = "none";
+    }
 
+}
+/**
+ * function renderListNhanVien
+ */
 const renderListNhanVien = (listNhanVien) => {
     let contentHTML = "";
     for (let i = 0; i < listNhanVien.length; i++) {
         const NV = listNhanVien[i];
-        const jobTitleConvert = function () {
-            if (NV.jobTitle === "1") {
-                return "Nhân Viên";
-            }
-            else if (NV.jobTitle === "2") {
-                return "Trưởng Phòng";
-            }
-            else if (NV.jobTitle === "3") {
-                return "Sếp";
-            }
-            else {
-                return "";
+        const jobTitleConvert = (job) => {
+            switch (job) {
+                case "nhanvien": return "Nhân viên";
+                case "truongphong": return "Trưởng phòng";
+                case "sep": return "Sếp";
+                default: return "";
+
             }
         }
         contentHTML += `
@@ -110,7 +111,7 @@ const renderListNhanVien = (listNhanVien) => {
             <td>${NV.name} </td>
             <td>${NV.email} </td>
             <td>${NV.startDay} </td>
-            <td>${jobTitleConvert()} </td>
+            <td>${jobTitleConvert(NV.jobTitle)} </td>
             <td>${NV.totalSalary}</td>
             <td>${NV.rank} </td>
             <td class = "btn btn-info" data-toggle="modal" data-target="#myModal"  onclick ="handleEditNhanVien('${NV.id}')" >Edit </td>
@@ -121,29 +122,30 @@ const renderListNhanVien = (listNhanVien) => {
     getEleID("tableDanhSach").innerHTML = contentHTML;
 }
 /**
- * Add Nhan vien
+ * mở form add nhân viên
  */
 getEleID("btnThem").onclick = function () {
-
+    deleteValidationTag();
     getEleID("header-title").innerHTML = "Thêm Nhân Viên";
     getEleID("btnCapNhat").style.display = "none";
     getEleID("btnThemNV").style.display = "block";
     resetForm();
 
-
 }
+// Add nhân viên vào localStorage
 getEleID("btnThemNV").onclick = function () {
 
-    const NV = getInfoNhanVien();
+    const NV = getInfoNhanVien(true);
+    if (!NV) return;
     manager.addNhanVien(NV);
     renderListNhanVien(manager.arr);
     setLocalStorage();
-    getEleID("tknv").disable = false;
+
     closeForm();
 
 }
 /**
- * Edit Nhan vien
+ * Edit Nhân viên
  */
 const handleEditNhanVien = (id) => {
 
@@ -168,10 +170,10 @@ const handleEditNhanVien = (id) => {
 }
 window.handleEditNhanVien = handleEditNhanVien;
 /**
- * Update Nhan vien
+ * Update Nhân viên
 */
 getEleID("btnCapNhat").onclick = () => {
-    const NV = getInfoNhanVien();
+    const NV = getInfoNhanVien(false);
     manager.updateNhanVien(NV);
     renderListNhanVien(manager.arr)
     setLocalStorage();
@@ -179,7 +181,7 @@ getEleID("btnCapNhat").onclick = () => {
 
 }
 /**
- * Delete Nhan vien
+ * Delete Nhân viên
  */
 const handleDeleteNhanVien = (id) => {
     const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa nhân viên này?");
@@ -215,8 +217,7 @@ const getLocalStorage = () => {
 getLocalStorage();
 
 /**
- * search nhan vien
- *  
+ * search Nhân viên
  */
 getEleID("searchName").addEventListener("keyup", () => {
     const keyword = getEleID("searchName").value;
