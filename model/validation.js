@@ -100,6 +100,16 @@ class Validation {
         return true;
 
     };
+    checkMinMax(value, errorId, mess, min, max) {
+        if (value && min <= value && value <= max) {
+            getEleID(errorId).style.display = "none";
+            getEleID(errorId).innerHTML = "";
+            return true;
+        }
+        getEleID(errorId).style.display = "block";
+        getEleID(errorId).innerHTML = mess;
+        return false;
+    }
 };
 
 

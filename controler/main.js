@@ -61,14 +61,16 @@ const getInfoNhanVien = (isAdd) => {
 
     // salary validation
     isValid &=
-        validate.checkEmpty(baseSalary, "tbLuongCB", "(*) Vui Lòng nhập lương cơ bản");
+        validate.checkEmpty(baseSalary, "tbLuongCB", "(*) Vui Lòng nhập lương cơ bản") &&
+        validate.checkMinMax(baseSalary, "tbLuongCB", "Lương cơ bản 1 000 000 - 20 000 000", 1000000, 20000000);
 
     // jobTitile validation
     isValid &=
         validate.checkOption("chucvu", "tbChucVu", "(*) Vui Lòng chọn vị trí công việc");
     // work hours validation
     isValid &=
-        validate.checkEmpty(workHours, "tbGiolam", "(*) Vui Lòng nhập giờ làm");
+        validate.checkEmpty(workHours, "tbGiolam", "(*) Vui Lòng nhập giờ làm") &&
+        validate.checkMinMax(workHours, "tbGiolam", "Số giờ làm trong tháng 80 - 200 giờ", 80, 200);
 
     if (!isValid) return null;
 
@@ -104,6 +106,14 @@ const renderListNhanVien = (listNhanVien) => {
 
             }
         }
+        // Format thành tiền Việt Nam
+        const formatCurrencyVND = (amount) => {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                maximumFractionDigits: 0 // Không hiển thị phần thập phân
+            }).format(amount);
+        };
         contentHTML += `
         <tr>
             <td>${NV.id} </td>
@@ -111,7 +121,7 @@ const renderListNhanVien = (listNhanVien) => {
             <td>${NV.email} </td>
             <td>${NV.startDay} </td>
             <td>${jobTitleConvert(NV.jobTitle)} </td>
-            <td>${NV.totalSalary}</td>
+            <td>${formatCurrencyVND(NV.totalSalary)}</td>
             <td>${NV.rank} </td>
             <td class = "btn btn-info" data-toggle="modal" data-target="#myModal"  onclick ="handleEditNhanVien('${NV.id}')" >Edit </td>
             <td class = "btn btn-danger" onclick = "handleDeleteNhanVien('${NV.id}')">Delete </td>
@@ -191,6 +201,31 @@ const handleDeleteNhanVien = (id) => {
     }
 }
 window.handleDeleteNhanVien = handleDeleteNhanVien;
+
+/**
+ * sắp sếp danh sách tăng theo thứ tự ID
+ */
+getEleID("SapXepTang").onclick = () => {
+    renderListNhanVien(manager.sortUpByID());
+    getEleID("SapXepTang").style.display = "none";
+    getEleID("SapXepGiam").style.display = "inline-block";
+}
+/**
+ * sắp sếp danh sách giảm theo thứ tự ID
+ */
+getEleID("SapXepGiam").onclick = () => {
+    renderListNhanVien(manager.sortDownByID());
+    getEleID("SapXepTang").style.display = "inline-block";
+    getEleID("SapXepGiam").style.display = "none";
+}
+
+/**
+ * lọc danh sách theo xếp loại (Xuất sắc, giỏi, Khá, trung bình)
+ */
+document.getElementsByClassName("fa fa-cog").onclick = () => {
+
+}
+
 
 /**
  * set localStorage

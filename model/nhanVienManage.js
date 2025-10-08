@@ -63,7 +63,24 @@ class NvManager {
             return nv;
         });
     }
+    sortUpByID() {
+        return this.arr.sort((a, b) => {
+            // Nếu ID là số
+            return parseInt(a.id) - parseInt(b.id);
 
+            // Nếu ID là chuỗi, dùng:
+            // return a.id.localeCompare(b.id);
+        });
+    }
+    sortDownByID() {
+        return this.arr.sort((a, b) => {
+            // Nếu ID là số
+            return parseInt(b.id) - parseInt(a.id);
+
+            // Nếu ID là chuỗi, dùng:
+            // return a.id.localeCompare(b.id);
+        });
+    }
     searchNhanVien(keyword) {
 
         const searchNV = [];
