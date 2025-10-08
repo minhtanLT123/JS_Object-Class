@@ -226,6 +226,36 @@ document.getElementsByClassName("fa fa-cog").onclick = () => {
 
 }
 
+// Lọc theo rank của nhân viên
+const filterIcon = document.getElementById("filterRankIcon");
+const dropdown = document.getElementById("dropdownRank");
+
+// Toggle dropdown khi click biểu tượng
+filterIcon.addEventListener("click", (e) => {
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+});
+
+// Ẩn dropdown khi click ra ngoài
+document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && e.target !== filterIcon) {
+        dropdown.style.display = "none";
+    }
+});
+
+// Lọc danh sách theo xếp loại
+dropdown.querySelectorAll(".dropdown-item").forEach(item => {
+    item.addEventListener("click", () => {
+        const selectedRank = item.getAttribute("data-rank");
+        dropdown.style.display = "none";
+
+        if (selectedRank === "all") {
+            renderListNhanVien(manager.arr);
+        } else {
+            const filtered = manager.arr.filter(nv => nv.rank === selectedRank);
+            renderListNhanVien(filtered);
+        }
+    });
+});
 
 /**
  * set localStorage

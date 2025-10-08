@@ -24,16 +24,16 @@ class NhanVien {
 
     xepLoaiRank() {
         if (this.workHours >= 192) {
-            this.rank = "Nhân viên xuất sắc";
+            this.rank = "Xuất sắc";
         }
         else if (this.workHours >= 176) {
-            this.rank = "Nhân viên giỏi";
+            this.rank = "Giỏi";
         }
         else if (this.workHours >= 160) {
-            this.rank = "Nhân viên khá";
+            this.rank = "Khá";
         }
         else {
-            this.rank = "Nhân viên trung bình";
+            this.rank = "Trung bình";
         }
     }
 
