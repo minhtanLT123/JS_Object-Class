@@ -291,6 +291,132 @@ getEleID("searchName").addEventListener("keyup", () => {
 });
 
 
+/**
+ * Nhân viên mẫu
+ */
+
+
+const danhSachNhanVienMau = [
+    {
+        id: "001",
+        name: "Nguyễn Văn A",
+        email: "a.nguyen@example.com",
+        password: "Abc@123",
+        startDay: "2023-01-15",
+        baseSalary: 12000000,
+        jobTitle: "nhanvien",
+        workHours: 160
+    },
+    {
+        id: "002",
+        name: "Trần Thị B",
+        email: "b.tran@example.com",
+        password: "Bcd@456",
+        startDay: "2023-02-20",
+        baseSalary: 15000000,
+        jobTitle: "truongphong",
+        workHours: 180
+    },
+    {
+        id: "003",
+        name: "Lê Văn C",
+        email: "c.le@example.com",
+        password: "Cde@789",
+        startDay: "2023-03-10",
+        baseSalary: 20000000,
+        jobTitle: "sep",
+        workHours: 190
+    },
+    {
+        id: "004",
+        name: "Phạm Thị D",
+        email: "d.pham@example.com",
+        password: "Def@321",
+        startDay: "2023-04-05",
+        baseSalary: 11000000,
+        jobTitle: "nhanvien",
+        workHours: 150
+    },
+    {
+        id: "005",
+        name: "Hoàng Văn E",
+        email: "e.hoang@example.com",
+        password: "Efg@654",
+        startDay: "2023-05-12",
+        baseSalary: 13000000,
+        jobTitle: "truongphong",
+        workHours: 170
+    },
+    {
+        id: "006",
+        name: "Đặng Thị F",
+        email: "f.dang@example.com",
+        password: "Fgh@987",
+        startDay: "2023-06-18",
+        baseSalary: 18000000,
+        jobTitle: "sep",
+        workHours: 200
+    },
+    {
+        id: "007",
+        name: "Vũ Văn G",
+        email: "g.vu@example.com",
+        password: "Ghi@159",
+        startDay: "2023-07-22",
+        baseSalary: 10000000,
+        jobTitle: "nhanvien",
+        workHours: 140
+    },
+    {
+        id: "008",
+        name: "Ngô Thị H",
+        email: "h.ngo@example.com",
+        password: "Hij@753",
+        startDay: "2023-08-30",
+        baseSalary: 16000000,
+        jobTitle: "truongphong",
+        workHours: 175
+    },
+    {
+        id: "009",
+        name: "Bùi Văn I",
+        email: "i.bui@example.com",
+        password: "Ijk@852",
+        startDay: "2023-09-25",
+        baseSalary: 19000000,
+        jobTitle: "sep",
+        workHours: 195
+    },
+    {
+        id: "010",
+        name: "Đỗ Thị J",
+        email: "j.do@example.com",
+        password: "Jkl@456",
+        startDay: "2023-10-10",
+        baseSalary: 12500000,
+        jobTitle: "nhanvien",
+        workHours: 160
+    }
+];
+
+getEleID("btnChonNhanVienMau").onclick = () => {
+    let NvMau = [];
+
+    for (let i = 0; i < danhSachNhanVienMau.length; i++) {
+        const nvData = danhSachNhanVienMau[i];
+        const NV = new NhanVien(nvData.id, nvData.name, nvData.email, nvData.password, nvData.startDay, nvData.baseSalary, nvData.jobTitle, nvData.workHours);
+        NV.tinhTongLuong();
+        NV.xepLoaiRank();
+        NvMau.push(NV);
+
+    }
+    console.log(NvMau);
+    manager.arr = NvMau;
+    setLocalStorage();
+    getLocalStorage();
+}
+
+
 
 
 
