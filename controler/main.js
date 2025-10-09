@@ -416,6 +416,13 @@ getEleID("btnChonNhanVienMau").onclick = () => {
     getLocalStorage();
 }
 
+// xóa tất cả
+getEleID("deleteAll").onclick = () => {
+    manager.arr = [];
+    setLocalStorage();
+    getLocalStorage();
+}
+
 
 
 
